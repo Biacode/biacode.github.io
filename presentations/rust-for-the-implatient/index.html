@@ -24,33 +24,32 @@
 </head>
 <body>
 <textarea id="source">
-
 # Rust for the impatient
 ```text
-  ____       _      ____     ____      _      __  __   ____  
+  ____       _      ____     ____      _      __  __   ____
  | __ )     / \    |  _ \   / ___|    / \    |  \/  | |  _ \
  |  _ \    / _ \   | |_) | | |       / _ \   | |\/| | | |_) |
  | |_) |  / ___ \  |  _ <  | |___   / ___ \  | |  | | |  __/
- |____/  /_/   \_\ |_| \_\  \____| /_/   \_\ |_|  |_| |_|    
+ |____/  /_/   \_\ |_| \_\  \____| /_/   \_\ |_|  |_| |_|
 ```
 
 ---
 
 # About me
-**Author:** Arthur Asatryan  
-Software Engineer at SFL LLC.  
-**Email:** biacoder@gmail.com  
-**GitHub:** [https://github.com/Biacode](biacoder@gmail.com)  
-**Twitter:** [https://twitter.com/biacode](https://twitter.com/biacode)  
-**Linkedin:** [https://www.linkedin.com/in/arthur-asatryan/](https://www.linkedin.com/in/arthur-asatryan/)  
+**Author:** Arthur Asatryan <br/>
+Software Engineer at SFL LLC. <br/>
+**Email:** biacoder@gmail.com <br/>
+**GitHub:** [https://github.com/Biacode](biacoder@gmail.com) <br/>
+**Twitter:** [https://twitter.com/biacode](https://twitter.com/biacode) <br/>
+**Linkedin:** [https://www.linkedin.com/in/arthur-asatryan/](https://www.linkedin.com/in/arthur-asatryan/) <br/>
 
 ---
 
 # What is rust?
-Rust is a modern systems programming language focusing on safety, speed, and concurrency.  
-It accomplishes these goals by being memory safe without using garbage collection.  
-In current IT sphere, you have safety or more control.  
-Rust has both, safety and control in the same place.  
+Rust is a modern systems programming language focusing on safety, speed, and concurrency. <br/>
+It accomplishes these goals by being memory safe without using garbage collection. <br/>
+In current IT sphere, you have safety or more control. <br/>
+Rust has both, safety and control in the same place. <br/>
 
 ---
 
@@ -80,7 +79,7 @@ Rust has both, safety and control in the same place.
 ---
 
 # Simple Installation
-Go to [https://www.rustup.rs](https://www.rustup.rs)  
+Go to [https://www.rustup.rs](https://www.rustup.rs) <br/>
 which suggests to copy and paste `curl https://sh.rustup.rs -sSf | sh` to your terminal.
 
 ---
@@ -98,7 +97,7 @@ The rustup brings
 ---
 
 # Cargo package manager
-[crates.io](https://crates.io/) the Rust community’s crate host.
+[crates.io](https://crates.io/) the Rust community’s crate host. <br/>
 * Unified tool and central repository for entire rust community.
 * Easy to use and very intuitive CLI commands.
 * Build, execute, test, benchmark and publish bin or lib projects.
@@ -137,8 +136,8 @@ log = "0.3"
 ---
 
 # crates.io is a centralized rust community’s packages repository.
-Already **151,554,732** Downloads and **9,286** crates.
-In fact the amount of downloads is not exact.
+Already **151,554,732** Downloads and **9,286** crates. <br/>
+In fact the amount of downloads is not exact. <br/>
 
 ---
 
@@ -159,7 +158,7 @@ cargo publish
 ---
 
 # Documentation
-The rust documentation is really differs from your know language documentations:
+The rust documentation is really differs from your know language documentations
 * Markdown support.
 * Compile time checks.
 * Unified host for all open source libs documentations.
@@ -281,7 +280,7 @@ error: `boo` does not live long enough
 ---
 
 # Memory management
-Rust has fine-grained memory management.  
+Rust has fine-grained memory management. <br/>
 And because of borrowing and ownership, it becomes automatically managed.
 
 # The heap allocated variables.
@@ -357,10 +356,10 @@ error[E0502]: cannot borrow `user_vec` as mutable because it is also borrowed as
 ---
 
 # Concurrency
-Mutable state is not bad.  
-Shared immutable state is not bad.  
-Shared mutable state is bad.  
-Ownership and borrowing _by default_ prevents data races  
+Mutable state is not bad. <br/>
+Shared immutable state is not bad. <br/>
+Shared mutable state is bad. <br/>
+Ownership and borrowing _by default_ prevents data races.
 
 ---
 
@@ -464,7 +463,126 @@ fn produce_user() -> User {
 
 ---
 
-# FFI
+# Testing
+There is built in testing framework
+```rust
+#[derive(Debug, Copy, Clone)]
+struct User {
+    age: u8
+}
+
+impl User {
+    fn new(age: u8) -> Self {
+        User {
+            age: age
+        }
+    }
+
+    fn get_age(&self) -> u8 {
+        self.age
+    }
+}
+
+#[cfg(test)]
+mod tests {
+
+    use super::*;
+
+    #[test]
+    fn user_age() {
+        let user = User::new(35);
+        assert_eq!(35, user.get_age());
+    }
+
+    #[test]
+    #[ignore]
+    fn expensive_test() {
+        // Code that takes an hour to run...
+    }
+
+    #[test]
+    #[should_panic(expected = "assertion failed")]
+    fn it_works() {
+        assert_eq!("Hello", "world");
+    }
+}
+```
+
+---
+
+# Conditional compilation
+The attribute `cfg` allows to compile code based on passed flags
+```rust
+#[cfg(any(unix, windows))]
+
+#[cfg(all(unix, target_pointer_width = "32"))]
+
+#[cfg(not(foo))]
+
+#[cfg(any(not(unix), all(target_os="macos", target_arch = "powerpc")))]
+```
+
+Even custom attributes predefined in `.toml` file
+```toml
+[features]
+default = []
+
+foo = []
+```
+or from CLI
+```bash
+--cfg feature="${feature_name}"
+```
+
+And use them from code
+```rust
+#[cfg(feature = "foo")]
+mod foo {
+}
+```
+
+---
+
+# Documentation
+To generate rust doc simply execute command
+```bash
+cargo doc
+```
+
+rustdoc supports `Markdown`
+```rust
+/// Constructs a new `Rc<T>`.
+///
+/// # Examples
+///
+/// ```
+/// use std::rc::Rc;
+///
+/// let five = Rc::new(5);
+/// ```
+pub fn new(value: T) -> Rc<T> {
+    // Implementation goes here.
+}
+```
+
+---
+
+# FFI - Foreign Function Interface
+Rust can use C bindings
+Currently no support for C++ ABI.
+
+# Rust can be easily embedded in to other languages
+* C
+* C++
+* Erlang
+* Haskell
+* Java
+* Lua
+* Ruby
+* Node.js
+* Objective-C
+* Python
+* R
 
 ---
 
@@ -482,7 +600,7 @@ fn produce_user() -> User {
 ---
 
 ### Game dev
-* Piston game engine - [pisto](http://www.piston.rs/)
+* Piston game engine - [piston](http://www.piston.rs/)
 * Amethyst game engine - [amethyst](https://www.amethyst.rs/)
 
 ---
@@ -512,7 +630,7 @@ fn produce_user() -> User {
 
 **Cons**
 * There is no such libraries which are passed their proof of concept for a long run.
-* The existing libraries in most cases have no stable / immutable API yet.  
+* The existing libraries in most cases have no stable / immutable API yet.
 Cargo as well as Rust lang itself using [Semantic Versioning](http://semver.org) principle
 * The language itself is not newbie friendly, and it takes decent learning course.
 * No real books, only documentation and article pages.
@@ -530,9 +648,28 @@ Although the docs are amazing (also there is milestone to publish first rust boo
 
 ---
 
-Thanks to [Rust Community](https://users.rust-lang.org/t/rust-presentation-review/10858/2) and others for review.
+# Future read
+Lot of topics are not covered yet. Like
+* Macro
+* Generics
+* Functional programming
+* Match expressions
+* Tuple
+* Expressions
+* Error handling
+* Option
+* Result
+* Closures in depth
+* Traits
+* Std library
+* Unsafe operations
+* etc...
 
+---
 
+# Thanks
+Special thanks to [Rust Community](https://users.rust-lang.org/t/rust-presentation-review/10858/2) and others for review. <br/>
+Slideshow created using [RemarkJS](https://remarkjs.com/)
 </textarea>
 <script src="js/remark-latest.min.js"></script>
 <script>
